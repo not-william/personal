@@ -1,16 +1,18 @@
 <template>
-  <div id="app">
-    <the-navigation />
+  <div id="app" class="">
+    <main class="container mx-auto">
     <router-view/>
+    </main>
   </div>
 </template>
 
 <script>
-  import TheNavigation from '@/components/TheNavigation'
 
   export default {
     components: {
-      TheNavigation
+      //
     }
   }
 </script>
+
+<style src="./assets/styles/app.css">

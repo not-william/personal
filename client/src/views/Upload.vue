@@ -1,6 +1,8 @@
 <template>
   <div>
-    Dashboard
+    <form action="#" @click.prevent="">
+      
+    </form>
   </div>
 </template>
 
@@ -8,7 +10,7 @@
 // @ is an alias to /src
 
 export default {
-  name: 'dashboard',
+  name: 'upload',
   components: {
   }
 }

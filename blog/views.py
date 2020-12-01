@@ -3,8 +3,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework import viewsets, permissions, generics
 from rest_framework.response import Response
-from blog.serializers import UserSerializer, GroupSerializer, ImageSerializer
-from blog.models import Image
+from blog.serializers import UserSerializer, GroupSerializer, ImageSerializer, PostSerializer
+from blog.models import Image, Post
 from blog.permissions import IsOwnerOrReadOnly
 
 def index(request):
@@ -16,7 +16,7 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
     def retrieve(self, request, pk=None):
         if request.user and pk == 'me':
@@ -38,7 +38,23 @@ class ImageViewSet(viewsets.ModelViewSet):
     """
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+    
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+    
+    def get_queryset(self):
+        queryset = Image.objects.all()
+        search = self.request.query_params.get('search', None)
+        if search is not None:
+            queryset = queryset.filter(things__name__contains=search)
+        return queryset
+
+class PostViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows posts to be viewed or edited.
+    """
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
     
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)

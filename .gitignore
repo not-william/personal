@@ -2,3 +2,4 @@ lib
 bin
 pyvenv.cfg
 client/node_modules
+media/

@@ -1,0 +1,83 @@
+<template>
+  <div>
+    <app-image-modal
+      :image="post.images[imageOrder]"
+      :text="post.text"
+    />
+
+    <a
+      v-if="imageOrder > 0"
+      @click.prevent="incrementOrder(-1)"
+      href="#"
+      class="fixed left-0 z-50 top-1/2 ml-2 opacity-60 hover:opacity-100"
+     >
+      <img src="@/assets/images/arrow-circle-left-solid.svg" class="w-14"/>
+    </a>
+
+    <a
+      v-if="imageOrder < post.images.length - 1"
+      @click.prevent="incrementOrder(1)"
+      href="#"
+      class="fixed right-0 z-50 top-1/2 mr-2 opacity-60 hover:opacity-100"
+    >
+      <img src="@/assets/images/arrow-circle-right-solid.svg" class="w-14"/>
+    </a>
+
+    <a
+      @click.prevent="showTimeline()"
+      href="#"
+      class="fixed left-0 z-50 top-0 ml-2 mt-2 opacity-60 hover:opacity-100"
+    >
+      <img src="@/assets/images/times-circle-solid.svg" class="w-14"/>
+    </a>
+  </div>
+</template>
+
+<script>
+// @ is an alias to /src
+import axios from 'axios'
+import AppImageModal from '@/components/AppImageModal'
+
+export default {
+  name: 'image',
+
+  components: {
+    'app-image-modal': AppImageModal
+  },
+
+  data () {
+    return {
+      post: null,
+      imageOrder: null
+    }
+  },
+
+  methods: {
+    async getPost() {
+      let response = await axios.get(`posts/${this.$route.params.postId}`)
+      console.log(response)
+      this.post = response.data
+    },
+
+    incrementOrder(step) {
+      if (this.imageOrder == 0 && step == -1) {
+        return
+      }
+      if (this.imageOrder == this.post.images.length && step == 1) {
+        return
+      }
+      this.imageOrder += step
+      this.$router.push({ name: 'image', params: { postId: this.post.id, imageOrder: this.imageOrder } })
+    },
+
+    showTimeline() {
+      this.$router.push({name: 'home'})
+    }
+  },
+
+  mounted () {
+    this.imageOrder = parseInt(this.$route.params.imageOrder)
+    this.getPost()
+  }
+}
+</script>

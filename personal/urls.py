@@ -23,10 +23,14 @@ from rest_framework_simplejwt.views import (
 )
 from blog import views
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'groups', views.GroupViewSet)
 router.register(r'images', views.ImageViewSet)
+router.register(r'posts', views.PostViewSet)
 
 urlpatterns = [
     path('', include('blog.urls')),
@@ -35,4 +39,4 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api-auth/', include('rest_framework.urls')),
     path('admin/', admin.site.urls),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

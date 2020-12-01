@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import numpy as np
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,6 +29,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = 'media/'
 
 # Application definition
 
@@ -168,3 +171,20 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8080",
     "http://localhost:8080",
 ]
+
+
+from detectron2.config import get_cfg
+from detectron2.engine import DefaultPredictor
+from detectron2 import model_zoo
+from detectron2.data import MetadataCatalog
+
+cfg = get_cfg()
+# add project-specific config (e.g., TensorMask) here if you're not running a model in detectron2's core library
+cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
+cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5  # set threshold for this model
+# Find a model from detectron2's model zoo. You can use the https://dl.fbaipublicfiles... url as well
+cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml")
+cfg.MODEL.DEVICE = "cpu"
+PREDICTOR = DefaultPredictor(cfg)
+COCO_METADATA = MetadataCatalog.get(cfg.DATASETS.TRAIN[0])
+COCO_THINGS = np.array(COCO_METADATA.thing_classes)
