@@ -4,14 +4,13 @@ from django.conf import settings
 from PIL import Image as PImage
 from PIL.ExifTags import TAGS
 from datetime import datetime
-from keras.preprocessing.image import load_img
-from keras.preprocessing.image import img_to_array
-from keras.applications.imagenet_utils import decode_predictions
 import numpy as np
-from keras.applications import vgg16
 
 class Post(models.Model):
     text = models.CharField(max_length=1000)
+
+    def __str__(self):
+        return self.text
 
 
 class Image(models.Model):

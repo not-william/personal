@@ -23,17 +23,21 @@ class ThingSerializer(serializers.ModelSerializer):
 class ImageSerializer(serializers.ModelSerializer):
     # owner = serializers.ReadOnlyField(source='owner.username')
     things = serializers.StringRelatedField(many=True)
+    post = serializers.StringRelatedField()
 
     class Meta:
         model = Image
-        fields = ['id', 'description', 'location', 'snap_date', 'order', 'file', 'f_number', 'shutter_speed', 'focal_length', 'things']
+        fields = ['id', 'description', 'location', 'snap_date', 'order', 'file', 'f_number', 'shutter_speed', 'focal_length', 'things', 'post']
+
 
 class PostSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     images = serializers.SerializerMethodField()
+
     def get_images(self, instance):
         images = instance.images.order_by('order')
-        return ImageSerializer(images, many=True).data
+        return ImageSerializer(images, many=True, context=self.context).data
+
     class Meta:
         model = Post
         fields = ['id', 'text', 'owner', 'images']
