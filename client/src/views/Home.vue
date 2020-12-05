@@ -5,8 +5,8 @@
         <label for="search">
           <img src="@/assets/images/search-solid.svg" class="h-5 inline opacity-60 mb-1 mr-2" />
         </label>
-        <input class="p-2 pr-9 text-md inline" type="text" placeholder='e.g. "wine" or "kyoto"' name="search" id="search" v-model="search" @keydown.enter.prevent/>
-        <a v-if="search" href="#" @click.prevent="search=''">
+        <input class="p-2 pr-9 text-md inline" type="text" placeholder='e.g. "wine" or "kyoto"' name="search" id="search" v-model="searchString" @keydown.enter.prevent/>
+        <a v-if="searchString" href="#" @click.prevent="searchString=''">
           <img src="@/assets/images/times-circle-solid.svg" class="h-5 inline opacity-60 mb-1 relative right-7 hover:opacity:80" />
         </a>
       </form>
@@ -34,14 +34,15 @@ export default {
   data () {
     return {
       search: null,
+      searchString: null,
       images: null,
       fromRoute: false,
     }
   },
 
   watch: {
-    search () {
-      if (this.search.length > 0) {
+    searchString () {
+      if (this.searchString.length > 0) {
         this.waitSearch()
       } else {
         this.images = null
@@ -55,13 +56,14 @@ export default {
         this.fromRoute = false
         return
       }
+      this.search = this.searchString
       this.$router.push({ name: 'search', params: { 'search': this.search } })
       this.searchImages()
     }, 500),
 
     async searchImages () {
       let response = await axios.get('images?search=' + this.search)
-      if (this.search.length > 0) {
+      if (this.searchString.length > 0) {
         this.images = response.data.results
       }
     }
@@ -71,6 +73,7 @@ export default {
     if (this.$route.params.search) {
       console.log("before mount")
       this.fromRoute = true
+      this.searchString = this.$route.params.search
       this.search = this.$route.params.search 
       this.searchImages()
     }
