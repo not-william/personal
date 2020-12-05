@@ -8,7 +8,7 @@ import '@/assets/styles/app.css'
 
 require('@/store/subscriber.js')
 
-axios.defaults.baseURL = 'http://127.0.0.1:8000/api/'
+axios.defaults.baseURL = 'http://143.110.170.163:8000/api/'
 
 Vue.config.productionTip = false
 
