@@ -5,7 +5,7 @@
         :src="image.file"
         id="image"
         style="margin-bottom: 10000px;"
-        class="max-h-screen object-contain"
+        class="max-h-screen inline object-contain"
       />
       <div style="height: max-content;" class="bg-white inline p-6 mt-3 ml-3">
         <div v-if="text" class="mb-4 text-lg">
@@ -34,6 +34,11 @@
 
 <script>
 export default {
+  data () {
+    return {
+      imgLoaded: false
+    }
+  },
   props: {
     image: {
       required: true,
@@ -47,29 +52,29 @@ export default {
       default: false,
     },
   },
-  mounted () {
-    function loaded() {
-      var h = imageObj.clientHeight
+
+  methods: {
+    loaded () {
+      this.imgLoaded = true
+      var h = this.imageObj.clientHeight
       const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
-      console.log(vh)
-      console.log(h)
       var margin = (vh - h) / 2
-      console.log(margin)
-      imageObj.style.marginTop = String(margin) + 'px'
+      this.imageObj.style.marginTop = String(margin) + 'px'
     }
+  },
+  mounted () {
+    this.imageObj = document.getElementById('image')
 
-    let imageObj = document.getElementById('image')
-
-    if (imageObj.complete) {
-      loaded()
+    if (this.imageObj.complete) {
+      this.loaded()
     } else {
-      imageObj.addEventListener('load', loaded)
-      imageObj.addEventListener('error', function() {
+      this.imageObj.addEventListener('load', this.loaded)
+      this.imageObj.addEventListener('error', function() {
           //
       })
     }
 
-    window.onresize = loaded;
+    window.onresize = this.loaded;
   }
 }
 </script>
