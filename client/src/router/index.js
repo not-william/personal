@@ -3,7 +3,8 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import SignIn from '../views/SignIn.vue'
 import Upload from '../views/Upload.vue'
-import Image from '../views/Image.vue'
+import ImageFromPost from '../views/ImageFromPost.vue'
+import ImageFromSearch from '../views/ImageFromSearch.vue'
 import store from '../store'
 
 Vue.use(VueRouter)
@@ -15,9 +16,19 @@ const routes = [
     component: Home
   },
   {
+    path: '/search/:search',
+    name: 'search',
+    component: Home,
+  },
+  {
     path:'/post/:postId/image/:imageOrder',
-    name: 'image',
-    component: Image
+    name: 'image-from-post',
+    component: ImageFromPost
+  },
+  {
+    path:'/image/:imageId',
+    name: 'image-from-search',
+    component: ImageFromSearch
   },
   {
     path: '/signin',

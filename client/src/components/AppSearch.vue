@@ -1,7 +1,7 @@
 <template>
   <form>
     {{images}}
-    <input type="text" placeholder="e.g. boat" name="search" v-model="search"/>
+    <input type="text" placeholder='e.g. "wine" or "kyoto"' name="search" v-model="search"/>
   </form>
 </template>
 

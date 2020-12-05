@@ -1,5 +1,5 @@
 <template>
-    <router-link :to="{name: 'image', params: {postId: post.id, imageOrder: 0}}" class="p-3 transition duration-100 hover:bg-gray-200 text-black min-height-full">
+    <router-link :to="{name: 'image-from-post', params: {postId: post.id, imageOrder: 1}}" class="p-3 transition duration-100 hover:bg-gray-200 text-black min-height-full">
       <div>{{post.text}}</div>
       <div class="grid grid-cols-2 mt-2">
         <app-image 

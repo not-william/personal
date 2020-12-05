@@ -1,8 +1,16 @@
 <template>
   <div>
-    <router-link :to="{name: 'image', params: {postId: postId, imageOrder: imageOrder}}" >
+    <router-link v-if="postId" :to="{name: 'image-from-post', params: {postId: postId, imageOrder: image.order}}" >
+    
       <img
-        :src="'http://localhost:8000' + image.file + ':sm'"
+        :src="image.file + ':sm'"
+        class="border border-grey-10 border-t-0 border-r-0 hover:opacity-80 transition duration-100"
+        :class="borderRoundClass"
+      />
+    </router-link>
+    <router-link v-if="!postId" :to="{name: 'image-from-search', params: {imageId: image.id}}">
+      <img
+        :src="image.file + ':sm'"
         class="border border-grey-10 border-t-0 border-r-0 hover:opacity-80 transition duration-100"
         :class="borderRoundClass"
       />
@@ -14,18 +22,21 @@
 export default {
   computed: {
     borderRoundClass() {
-      switch (this.imageOrder) {
-        case 0:
-          return 'rounded-tl-xl';
-        case 1:
-          return 'rounded-tr-xl';
-        case 2:
-          return 'rounded-bl-xl';
-        case 3:
-          return 'rounded-br-xl';
-        default:
-          console.log("Invalid image order")
-          return null;
+      if (!this.search) {
+        switch (this.image.order) {
+          case 1:
+            return 'rounded-tl-xl';
+          case 2:
+            return 'rounded-tr-xl';
+          case 3:
+            return 'rounded-bl-xl';
+          case 4:
+            return 'rounded-br-xl';
+          default:
+            return 'rounded-xl';
+        }
+      } else {
+        return 'rounded-xl'
       }
     }
   },
@@ -35,10 +46,11 @@ export default {
       type: Object
     },
     postId: {
-      required: true,
+      required: false,
     },
-    imageOrder: {
-      required: true,
+    search: {
+      required: false,
+      default: false,
     }
   }
 }

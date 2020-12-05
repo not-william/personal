@@ -1,12 +1,12 @@
 <template>
   <div>
     <app-image-modal
-      :image="post.images[imageOrder]"
+      :image="post.images[imageOrder - 1]"
       :text="post.text"
     />
 
     <a
-      v-if="imageOrder > 0"
+      v-if="imageOrder > 1"
       @click.prevent="incrementOrder(-1)"
       href="#"
       class="fixed left-0 z-50 top-1/2 ml-2 opacity-60 hover:opacity-100"
@@ -15,7 +15,7 @@
     </a>
 
     <a
-      v-if="imageOrder < post.images.length - 1"
+      v-if="imageOrder < post.images.length"
       @click.prevent="incrementOrder(1)"
       href="#"
       class="fixed right-0 z-50 top-1/2 mr-2 opacity-60 hover:opacity-100"
@@ -39,7 +39,7 @@ import axios from 'axios'
 import AppImageModal from '@/components/AppImageModal'
 
 export default {
-  name: 'image',
+  name: 'image-from-post',
 
   components: {
     'app-image-modal': AppImageModal
@@ -60,14 +60,14 @@ export default {
     },
 
     incrementOrder(step) {
-      if (this.imageOrder == 0 && step == -1) {
+      if (this.imageOrder == 1 && step == -1) {
         return
       }
-      if (this.imageOrder == this.post.images.length && step == 1) {
+      if (this.imageOrder == this.post.images.length + 1 && step == 1) {
         return
       }
       this.imageOrder += step
-      this.$router.push({ name: 'image', params: { postId: this.post.id, imageOrder: this.imageOrder } })
+      this.$router.push({ name: 'image-from-post', params: { postId: this.post.id, imageOrder: this.imageOrder } })
     },
 
     showTimeline() {
