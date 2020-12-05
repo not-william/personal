@@ -77,8 +77,12 @@ export default {
   watch: {
     post () {
       const im = []
+      im[this.imageOrder] = new Image();
+      im[this.imageOrder].src = this.post.images[this.imageOrder - 1].file
       for (let i = 0; i < this.post.images.length; i++) {
-      console.log("Preloading")
+        if (i == this.imageOrder - 1) {
+          continue
+        }
         im[i] = new Image();
         im[i].src = this.post.images[i].file
       }
