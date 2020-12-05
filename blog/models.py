@@ -9,6 +9,9 @@ import numpy as np
 class Post(models.Model):
     text = models.CharField(max_length=1000)
 
+    class Meta:
+        ordering = ('-id',)
+
     def __str__(self):
         return self.text
 
