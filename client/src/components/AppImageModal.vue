@@ -3,6 +3,7 @@
     <div class="mx-auto flex flex-wrap">
       <img 
         :src="image.file"
+        id="image"
         style="margin-bottom: 10000px;"
         class="max-h-screen object-contain"
       />
@@ -44,7 +45,31 @@ export default {
     search: {
       required: false,
       default: false,
+    },
+  },
+  mounted () {
+    function loaded() {
+      var h = imageObj.clientHeight
+      const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+      console.log(vh)
+      console.log(h)
+      var margin = (vh - h) / 2
+      console.log(margin)
+      imageObj.style.marginTop = String(margin) + 'px'
     }
+
+    let imageObj = document.getElementById('image')
+
+    if (imageObj.complete) {
+      loaded()
+    } else {
+      imageObj.addEventListener('load', loaded)
+      imageObj.addEventListener('error', function() {
+          //
+      })
+    }
+
+    window.onresize = loaded;
   }
 }
 </script>
