@@ -1,11 +1,12 @@
 <template>
   <div class="fixed inset-0 bg-gray-600 flex">
-    <div class="mx-auto flex">
+    <div class="mx-auto flex flex-wrap">
       <img 
-        :src="'http://localhost:8000' + image.file"
-        class="max-h-screen"
+        :src="image.file"
+        style="margin-bottom: 10000px;"
+        class="max-h-screen object-contain"
       />
-      <div style="height: max-content;" class="bg-white p-6 m-3">
+      <div style="height: max-content;" class="bg-white inline p-6 mt-3 ml-3">
         <div v-if="text" class="mb-4 text-lg">
           {{ text }}
         </div>
@@ -39,6 +40,10 @@ export default {
     },
     text: {
       required: false,
+    },
+    search: {
+      required: false,
+      default: false,
     }
   }
 }
