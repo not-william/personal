@@ -10,7 +10,7 @@
       href="#"
       class="fixed left-0 z-50 top-0 ml-2 mt-2 opacity-60 hover:opacity-100"
     >
-      <img src="@/assets/images/times-circle-solid.svg" class="w-14"/>
+      <img src="@/assets/images/times-circle-solid.svg" class="w-10"/>
     </a>
   </div>
 </template>
