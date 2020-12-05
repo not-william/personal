@@ -38,6 +38,7 @@ class ImageViewSet(viewsets.ModelViewSet):
     """
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
+    permission_classes = [IsOwnerOrReadOnly]
     
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -46,8 +47,9 @@ class ImageViewSet(viewsets.ModelViewSet):
         queryset = Image.objects.all()
         search = self.request.query_params.get('search', None)
         if search is not None:
-            queryset = queryset.filter(things__name__contains=search)
-        return queryset
+            queryset = queryset.filter(things__name__icontains=search) \
+                | queryset.filter(location__icontains=search)
+        return queryset.distinct()
 
 class PostViewSet(viewsets.ModelViewSet):
     """
@@ -55,6 +57,7 @@ class PostViewSet(viewsets.ModelViewSet):
     """
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    permission_classes = [IsOwnerOrReadOnly]
     
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
