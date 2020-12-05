@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="grid grid-cols-2">
+    <div class="grid grid-cols-1 md:grid-cols-2">
       <app-post
         v-for="post in posts"
         :key="post.id"
@@ -31,7 +31,6 @@
     },
 
     mounted () {
-      console.log("Timeline mounted")
       this.getPosts()
     },
 
