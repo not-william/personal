@@ -46,6 +46,7 @@ export default {
         this.waitSearch()
       } else {
         this.images = null
+        this.$router.push({ name: 'home' })
       }
     } 
   },
