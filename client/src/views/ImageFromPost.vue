@@ -55,7 +55,6 @@ export default {
   methods: {
     async getPost() {
       let response = await axios.get(`posts/${this.$route.params.postId}`)
-      console.log(response)
       this.post = response.data
     },
 
@@ -72,12 +71,24 @@ export default {
 
     showTimeline() {
       this.$router.push({name: 'home'})
+    },
+  },
+
+  watch: {
+    post () {
+      const im = []
+      for (let i = 0; i < this.post.images.length; i++) {
+      console.log("Preloading")
+        im[i] = new Image();
+        im[i].src = this.post.images[i].file
+      }
     }
   },
 
   mounted () {
     this.imageOrder = parseInt(this.$route.params.imageOrder)
     this.getPost()
+    
   }
 }
 </script>
