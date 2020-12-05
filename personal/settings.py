@@ -13,24 +13,22 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import numpy as np
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'dpl!l@b0((xv=07w9iq6m7hf(nn5s&ix0#7ab-5dt^a&t8a)jt')
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
+DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'dpl!l@b0((xv=07w9iq6m7hf(nn5s&ix0#7ab-5dt^a&t8a)jt'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '143.110.170.163'
+]
 
 MEDIA_ROOT = BASE_DIR / 'media'
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 
 # Application definition
 
@@ -86,9 +84,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
-        'USER': 'will',
-        'PASSWORD': '',
-        'HOST': '',
+        'USER': os.environ.get('DJANGO_POSTGRES_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DJANGO_POSTGRES_PASSWORD', 'postgres'),
+        'HOST': 'db',
         'POST': '5432'
     }
 }
@@ -134,14 +132,14 @@ STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
+    'PAGE_SIZE': 100,
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=999),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=999),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': False,
@@ -170,6 +168,8 @@ SIMPLE_JWT = {
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8080",
     "http://localhost:8080",
+    "http://localhost",
+    '143.110.170.163'
 ]
 
 
