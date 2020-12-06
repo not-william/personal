@@ -2,12 +2,12 @@
   <div class="fixed inset-0 bg-gray-600 flex">
     <div class="mx-auto flex flex-wrap">
       <img 
-        :src="image.file"
+        :src="image.file + ':lg'"
         id="image"
         style="margin-bottom: 10000px;"
         class="max-h-screen inline object-contain"
       />
-      <div style="height: max-content;" class="bg-white inline p-6 mt-3 ml-3">
+      <div style="height: max-content;" class="bg-white inline p-6 mt-3 ml-3 w-64">
         <div v-if="text" class="mb-4 text-lg">
           {{ text }}
         </div>
@@ -17,7 +17,7 @@
         </div>
         <div v-if="image.f_number" class="flex mb-2 text-gray-600 text-sm">
           <img src="@/assets/images/aperture.svg" class="h-4 mr-2 opacity-80" style="margin-top: 2px;"/>
-          1/{{ image.f_number }}
+          f/{{ image.f_number }}
         </div>
         <div v-if="image.shutter_speed" class="flex mb-2 text-gray-600 text-sm">
           <img src="@/assets/images/stopwatch.svg" class="h-4 mr-2 opacity-80" style="margin-top: 2px;"/>
@@ -36,7 +36,7 @@
 export default {
   data () {
     return {
-      imgLoaded: false
+      //
     }
   },
   props: {
@@ -54,8 +54,7 @@ export default {
   },
 
   methods: {
-    loaded () {
-      this.imgLoaded = true
+    imResize () {
       var h = this.imageObj.clientHeight
       const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
       var margin = (vh - h) / 2
@@ -65,16 +64,9 @@ export default {
   mounted () {
     this.imageObj = document.getElementById('image')
 
-    if (this.imageObj.complete) {
-      this.loaded()
-    } else {
-      this.imageObj.addEventListener('load', this.loaded)
-      this.imageObj.addEventListener('error', function() {
-          //
-      })
-    }
+    setInterval(this.imResize, 10);
 
-    window.onresize = this.loaded;
+    window.onresize = this.imResize;
   }
 }
 </script>
