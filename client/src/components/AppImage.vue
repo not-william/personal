@@ -1,20 +1,13 @@
 <template>
   <div>
-    <router-link v-if="postId" :to="{name: 'image-from-post', params: {postId: postId, imageOrder: image.order}}" >
-    
+    <router-link :to="imageTo">
       <img
         :src="image.file + ':sm'"
-        class="border border-grey-10 border-t-0 border-r-0 hover:opacity-80 transition duration-100"
+        class="object-cover h-full border border-grey-10 border-t-0 border-r-0 hover:opacity-80 transition duration-100"
         :class="borderRoundClass"
       />
     </router-link>
-    <router-link v-if="!postId" :to="{name: 'image-from-search', params: {imageId: image.id}}">
-      <img
-        :src="image.file + ':sm'"
-        class="border border-grey-10 border-t-0 border-r-0 hover:opacity-80 transition duration-100"
-        :class="borderRoundClass"
-      />
-    </router-link>
+
   </div>
 </template>
 
@@ -37,6 +30,14 @@ export default {
         }
       } else {
         return 'rounded-xl'
+      }
+    },
+
+    imageTo() {
+      if (this.postId) {
+        return {name: 'image-from-post', params: {postId: this.postId, imageOrder: this.image.order}}
+      } else {
+        return {name: 'image-from-search', params: {imageId: this.image.id}}
       }
     }
   },

@@ -87,7 +87,7 @@ class Image(models.Model):
             image_lg = image.resize(size, PImage.ANTIALIAS)
             image_lg.save(self.file.path + ":lg", "JPEG")
 
-            factor = min(326 / height, 488 / width)
+            factor = max(326 * 2 / height, 488 * 2 / width)
             size = int(width * factor), int(height * factor)
             image_sm = image.resize(size, PImage.ANTIALIAS)
             image_sm.save(self.file.path + ":sm", "JPEG")
