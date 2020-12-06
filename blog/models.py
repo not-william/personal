@@ -8,9 +8,10 @@ import numpy as np
 
 class Post(models.Model):
     text = models.CharField(max_length=1000)
+    order = models.IntegerField(null=True)
 
     class Meta:
-        ordering = ('-id',)
+        ordering = ('-order',)
 
     def __str__(self):
         return self.text
@@ -85,12 +86,12 @@ class Image(models.Model):
             factor = min(1080 / height, 1)
             size = int(width * factor), int(height * factor)
             image_lg = image.resize(size, PImage.ANTIALIAS)
-            image_lg.save(self.file.path + ":lg", "JPEG")
+            image_lg.save(self.file.path + ":lg", "JPEG", quality=95)
 
             factor = max(326 * 2 / height, 488 * 2 / width)
             size = int(width * factor), int(height * factor)
             image_sm = image.resize(size, PImage.ANTIALIAS)
-            image_sm.save(self.file.path + ":sm", "JPEG")
+            image_sm.save(self.file.path + ":sm", "JPEG", quality=95)
 
 class Thing(models.Model):
     image_id = models.ForeignKey('Image', related_name="things", on_delete=models.CASCADE)
