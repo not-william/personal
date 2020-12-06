@@ -4,7 +4,7 @@
   >
     <router-link :to="imageTo">
       <img
-        :src="image.file + ':sm'"
+        :src="'sm-' + image.file"
         class="object-cover h-full border border-grey-10 border-t-0 border-r-0 hover:opacity-80 transition duration-100"
         :class="borderRoundClass"
       />

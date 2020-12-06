@@ -2,7 +2,7 @@
   <div class="fixed inset-0 bg-gray-600 flex">
     <div class="mx-auto flex flex-wrap">
       <img 
-        :src="image.file + ':lg'"
+        :src="'sm-' + image.file"
         id="image"
         style="margin-bottom: 10000px;"
         class="max-h-screen inline object-contain"
