@@ -86,12 +86,12 @@ class Image(models.Model):
             factor = min(1080 / height, 1)
             size = int(width * factor), int(height * factor)
             image_lg = image.resize(size, PImage.ANTIALIAS)
-            image_lg.save(self.file.path + ":lg", "JPEG", quality=95)
+            image_lg.save("lg-" + self.file.path, "JPEG", quality=95)
 
-            factor = max(326 * 2 / height, 488 * 2 / width)
+            factor = max(320 / height, 476 / width)
             size = int(width * factor), int(height * factor)
             image_sm = image.resize(size, PImage.ANTIALIAS)
-            image_sm.save(self.file.path + ":sm", "JPEG", quality=95)
+            image_sm.save("sm-" + self.file.path, "JPEG", quality=95)
 
 class Thing(models.Model):
     image_id = models.ForeignKey('Image', related_name="things", on_delete=models.CASCADE)
