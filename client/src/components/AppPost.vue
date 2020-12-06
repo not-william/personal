@@ -1,5 +1,8 @@
 <template>
-    <router-link :to="{name: 'image-from-post', params: {postId: post.id, imageOrder: 1}}" class="p-3 transition duration-100 hover:bg-gray-200 text-black min-height-full">
+    <router-link
+      :to="{name: 'image-from-post', params: {postId: post.id, imageOrder: 1}}"
+      class="p-3 transition duration-100 hover:bg-gray-200 text-black"
+    >
       <div>{{post.text}}</div>
       <div class="grid grid-cols-2 mt-2">
         <app-image 
@@ -33,15 +36,15 @@ export default {
   methods: {
     gridSpan (index) {
       if (this.post.images.length == 3 && index == 0) {
-        return 'row-span-2'
+        return 'row-span-2 h-80'
       }
       if (this.post.images.length == 2) {
-        return 'row-span-2'
+        return 'row-span-2 h-80'
       }
       if (this.post.images.length == 1) {
-        return 'row-span-2 col-span-2'
+        return 'row-span-2 col-span-2 h-80'
       }
-      return ''
+      return 'h-40'
     },
     borderClass (index) {
       if (this.post.images.length == 3) {
