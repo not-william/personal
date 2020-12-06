@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div
+    :class="gridSpan"
+  >
     <router-link :to="imageTo">
       <img
         :src="image.file + ':sm'"
@@ -15,6 +17,10 @@
 export default {
   computed: {
     borderRoundClass() {
+      if (this.borderRoundClassProp) {
+        return this.borderRoundClassProp
+      }
+
       if (!this.search) {
         switch (this.image.order) {
           case 1:
@@ -50,6 +56,14 @@ export default {
       required: false,
     },
     search: {
+      required: false,
+      default: false,
+    },
+    gridSpan: {
+      required: false,
+      default: ''
+    },
+    borderRoundClassProp: {
       required: false,
       default: false,
     }

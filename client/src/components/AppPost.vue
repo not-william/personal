@@ -8,6 +8,8 @@
           :image="image"
           :postId="post.id"
           :imageOrder="index"
+          :gridSpan="gridSpan(index)"
+          :borderRoundClassProp="borderClass(index)"
         />
       </div>
     </router-link>
@@ -26,6 +28,43 @@ export default {
 
   components: {
     'app-image': AppImage
+  },
+
+  methods: {
+    gridSpan (index) {
+      if (this.post.images.length == 3 && index == 0) {
+        return 'row-span-2'
+      }
+      if (this.post.images.length == 2) {
+        return 'row-span-2'
+      }
+      if (this.post.images.length == 1) {
+        return 'row-span-2 col-span-2'
+      }
+      return ''
+    },
+    borderClass (index) {
+      if (this.post.images.length == 3) {
+        if (index == 0) {
+          return 'rounded-tl-xl rounded-bl-xl'
+        }
+        if (index == 2) {
+          return 'rounded-br-xl'
+        }
+      }
+      if (this.post.images.length == 2) {
+        if (index == 0) {
+          return 'rounded-tl-xl rounded-bl-xl'
+        }
+        if (index == 1) {
+          return 'rounded-tr-xl rounded-br-xl'
+        }
+      }
+      if (this.post.images.length == 1) {
+        return 'rounded-xl'
+      }
+      return false
+    }
   }
 }
 </script>
