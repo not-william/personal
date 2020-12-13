@@ -1,4 +1,4 @@
-<img src="docs/screenshot.png />
+<img src="docs/screenshot.png" />
 
 Image sharing site:
 - Clean UI
