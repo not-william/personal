@@ -14,3 +14,4 @@ Features:
 Todo:
 - Add friendly upload form
 - Add scene classificaiton
+- Make API publicly accessable. Then you will be able to use the API backend while hosting the frontend yourself (works on github pages)
