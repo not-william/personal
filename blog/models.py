@@ -9,6 +9,7 @@ import numpy as np
 class Post(models.Model):
     text = models.CharField(max_length=1000)
     order = models.IntegerField(null=True)
+    owner = models.ForeignKey('auth.User', related_name='posts', on_delete=models.CASCADE)
 
     class Meta:
         ordering = ('-order',)
@@ -16,6 +17,11 @@ class Post(models.Model):
     def __str__(self):
         return self.text
 
+def insert_in_filepath(filepath, string):
+    path = filepath.split("/")
+    path[-1] = string + path[-1]
+    path = "/".join(path)
+    return path 
 
 class Image(models.Model):
     description = models.CharField(max_length=240)
@@ -29,6 +35,14 @@ class Image(models.Model):
     file = models.ImageField(upload_to='images')
     post = models.ForeignKey('Post', related_name='images', on_delete=models.CASCADE)
     order = models.IntegerField()
+
+    @property
+    def lg_file(self):
+        return insert_in_filepath(self.file.path, 'lg-')
+
+    @property
+    def sm_file(self):
+        return insert_in_filepath(self.file.path, 'sm-')
 
     class Meta:
         unique_together = ('post_id', 'order',)
@@ -86,12 +100,12 @@ class Image(models.Model):
             factor = min(1080 / height, 1)
             size = int(width * factor), int(height * factor)
             image_lg = image.resize(size, PImage.ANTIALIAS)
-            image_lg.save("lg-" + self.file.path, "JPEG", quality=95)
+            image_lg.save(self.lg_file, "JPEG", quality=95)
 
             factor = max(320 / height, 476 / width)
             size = int(width * factor), int(height * factor)
             image_sm = image.resize(size, PImage.ANTIALIAS)
-            image_sm.save("sm-" + self.file.path, "JPEG", quality=95)
+            image_sm.save(self.sm_file, "JPEG", quality=95)
 
 class Thing(models.Model):
     image_id = models.ForeignKey('Image', related_name="things", on_delete=models.CASCADE)

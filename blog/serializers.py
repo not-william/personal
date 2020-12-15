@@ -27,7 +27,7 @@ class ImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Image
-        fields = ['id', 'description', 'location', 'snap_date', 'order', 'file', 'f_number', 'shutter_speed', 'focal_length', 'things', 'post']
+        fields = ['id', 'description', 'location', 'snap_date', 'order', 'file', 'lg_file', 'sm_file', 'f_number', 'shutter_speed', 'focal_length', 'things', 'post']
 
 
 class PostSerializer(serializers.ModelSerializer):
