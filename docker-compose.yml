@@ -18,9 +18,14 @@ services:
       - "8000:8000"
     depends_on:
       - db
-  vue:
-    build: client
+    env_file:
+      - .env
+  nginx:
+    build: nginx
     ports:
       - "80:80"
     depends_on:
       - web
+    volumes:
+      - ./nginx/dist:/app
+      - ./media:/app/media
