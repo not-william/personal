@@ -45,6 +45,11 @@ class ImageViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         queryset = Image.objects.all()
+        username = self.request.query_params.get('username', None)
+        if username is None:
+            return None
+        else:
+            queryset = queryset.filter(owner__username=username)
         search = self.request.query_params.get('search', None)
         if search is not None:
             queryset = queryset.filter(things__name__icontains=search) \
@@ -61,3 +66,13 @@ class PostViewSet(viewsets.ModelViewSet):
     
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    def get_queryset(self):
+        queryset = Post.objects.all()
+        username = self.request.query_params.get('username', None)
+        if username is None:
+            return None
+        else:
+            queryset = queryset.filter(owner__username=username)
+
+        return queryset
