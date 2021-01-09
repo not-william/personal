@@ -9,6 +9,9 @@ services:
       - POSTGRES_PASSWORD=postgres
     volumes:
       - "/postgres/data:/var/lib/postgresql/data"
+    ports:
+      - "5422:5432"
+
   web:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
@@ -20,12 +23,12 @@ services:
       - db
     env_file:
       - .env
-  nginx:
-    build: nginx
-    ports:
-      - "80:80"
-    depends_on:
-      - web
-    volumes:
-      - ./nginx/dist:/app
-      - ./media:/app/media
+        #nginx:
+        #   build: nginx
+        #    ports:
+        #      - "80:80"
+        # depends_on:
+        #- web
+        #volumes:
+        #- ./nginx/dist:/app
+        #- ./media:/app/media
