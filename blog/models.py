@@ -1,51 +1,62 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.conf import settings
 from PIL import Image as PImage
 from PIL.ExifTags import TAGS
 from datetime import datetime
 import numpy as np
 
+
 class Post(models.Model):
     text = models.CharField(max_length=1000)
     order = models.IntegerField(null=True)
-    owner = models.ForeignKey('auth.User', related_name='posts', on_delete=models.CASCADE)
+    owner = models.ForeignKey(
+        "auth.User", related_name="posts", on_delete=models.CASCADE
+    )
 
     class Meta:
-        ordering = ('-order',)
+        ordering = ("-order",)
 
     def __str__(self):
         return self.text
+
 
 def insert_in_filepath(filepath, string):
     path = filepath.split("/")
     path[-1] = string + path[-1]
     path = "/".join(path)
-    return path 
+    return path
+
 
 class Image(models.Model):
     description = models.CharField(max_length=240)
     location = models.CharField(max_length=150)
-    snap_date = models.DateTimeField('date taken', editable=False, null=True)
+    snap_date = models.DateTimeField("date taken", editable=False, null=True)
     f_number = models.FloatField(editable=False, null=True)
     ISO = models.IntegerField(editable=False, null=True)
     focal_length = models.IntegerField(editable=False, null=True)
     shutter_speed = models.IntegerField(editable=False, null=True)
-    owner = models.ForeignKey('auth.User', related_name='images', on_delete=models.CASCADE)
-    file = models.ImageField(upload_to='images')
-    post = models.ForeignKey('Post', related_name='images', on_delete=models.CASCADE)
+    owner = models.ForeignKey(
+        "auth.User", related_name="images", on_delete=models.CASCADE
+    )
+    file = models.ImageField(upload_to="images")
+    post = models.ForeignKey(
+        "Post", related_name="images", on_delete=models.CASCADE, null=True
+    )
     order = models.IntegerField()
 
     @property
     def lg_file(self):
-        return insert_in_filepath(self.file.path, 'lg-')
+        return insert_in_filepath(self.file.path, "lg-")
 
     @property
     def sm_file(self):
-        return insert_in_filepath(self.file.path, 'sm-')
+        return insert_in_filepath(self.file.path, "sm-")
 
     class Meta:
-        unique_together = ('post_id', 'order',)
+        unique_together = (
+            "post_id",
+            "order",
+        )
 
     def save(self, *args, **kwargs):
         if self.file:
@@ -56,18 +67,18 @@ class Image(models.Model):
                 # get the tag name, instead of human unreadable tag id
                 tag = TAGS.get(tag_id, tag_id)
                 data = exifdata.get(tag_id)
-                # decode bytes 
+                # decode bytes
                 if isinstance(data, bytes):
                     data = data.decode()
                 readable_data[tag] = data
-            print(readable_data)
             f_number = readable_data["FNumber"]
             focal_length = readable_data["FocalLength"]
             ISO = readable_data["ISOSpeedRatings"]
             date_time_original = readable_data["DateTimeOriginal"]
-            print(date_time_original)
-            date_time_original = datetime.strptime(date_time_original, "%Y:%m:%d %H:%M:%S")
-            shutter_speed = round(2**float(readable_data["ShutterSpeedValue"]))
+            date_time_original = datetime.strptime(
+                date_time_original, "%Y:%m:%d %H:%M:%S"
+            )
+            shutter_speed = round(2 ** float(readable_data["ShutterSpeedValue"]))
 
             self.snap_date = date_time_original
             self.f_number = f_number
@@ -76,6 +87,18 @@ class Image(models.Model):
             self.shutter_speed = shutter_speed
 
             super(Image, self).save(*args, **kwargs)
+
+            width, height = image.size
+
+            factor = min(1080 / height, 1)
+            size = int(width * factor), int(height * factor)
+            image_lg = image.resize(size, PImage.ANTIALIAS)
+            image_lg.save(self.lg_file, "JPEG", quality=95)
+
+            factor = max(320 / height, 476 / width)
+            size = int(width * factor), int(height * factor)
+            image_sm = image.resize(size, PImage.ANTIALIAS)
+            image_sm.save(self.sm_file, "JPEG", quality=95)
 
             np_image = np.asarray(image)
             outputs = settings.PREDICTOR(np_image)
@@ -95,20 +118,11 @@ class Image(models.Model):
                 )
                 object_row.save()
 
-            width, height = image.size
-
-            factor = min(1080 / height, 1)
-            size = int(width * factor), int(height * factor)
-            image_lg = image.resize(size, PImage.ANTIALIAS)
-            image_lg.save(self.lg_file, "JPEG", quality=95)
-
-            factor = max(320 / height, 476 / width)
-            size = int(width * factor), int(height * factor)
-            image_sm = image.resize(size, PImage.ANTIALIAS)
-            image_sm.save(self.sm_file, "JPEG", quality=95)
 
 class Thing(models.Model):
-    image_id = models.ForeignKey('Image', related_name="things", on_delete=models.CASCADE)
+    image_id = models.ForeignKey(
+        "Image", related_name="things", on_delete=models.CASCADE
+    )
     name = models.CharField(max_length=256)
     x_min = models.FloatField()
     x_max = models.FloatField()
